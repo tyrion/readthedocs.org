@@ -155,10 +155,11 @@ def scrape_conf_file(project):
     #project.extensions = data.get('extensions', '').replace('"', "'")
     project.path = os.getcwd()
 
-    try:
-        project.version = decimal.Decimal(data.get('version', '0.1.0'))
-    except decimal.InvalidOperation:
-        project.version = ''
+    if not project.version:
+        try:
+            project.version = decimal.Decimal(data.get('version', '0.1.0'))
+        except decimal.InvalidOperation:
+            project.version = ''
 
     project.save()
 

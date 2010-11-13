@@ -49,6 +49,9 @@ class Project(models.Model):
         default=constants.LIVE_STATUS)
     skip = models.BooleanField()
 
+    versions = models.ManyToManyField('self', symmetrical=True, blank=True,
+            help_text="Other versions of this project")
+
     tags = TaggableManager()
 
     objects = ProjectManager()

@@ -10,6 +10,15 @@ from projects.tasks import update_docs
 
 
 class ProjectForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+
+        proj_qs = Project.objects.filter(user=self.instance.user)
+        if self.instance.pk:
+            proj_qs = proj_qs.exclude(pk=self.instance.pk)
+
+        self.fields['versions'].queryset = proj_qs
+
     def clean_name(self):
         name = self.cleaned_data.get('name', '')
         if not self.instance.pk:
@@ -54,7 +63,7 @@ class ImportProjectForm(ProjectForm):
         help_text='URL for your code (hg or git). Ex. http://github.com/ericholscher/django-kong.git')
     class Meta:
         model = Project
-        exclude = ('skip', 'theme', 'docs_directory', 'user', 'slug', 'version', 'copyright', 'status')
+        exclude = ('skip', 'theme', 'docs_directory', 'user', 'slug', 'copyright', 'status')
 
     def clean_repo(self):
         repo = self.cleaned_data.get('repo', '').strip()

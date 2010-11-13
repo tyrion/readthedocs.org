@@ -61,10 +61,10 @@ def project_create(request):
     The view for creating a new project where the docs will be hosted
     as objects and edited through the site
     """
-    form = CreateProjectForm(request.POST or None)
+    project = Project(user=request.user)
+    form = CreateProjectForm(request.POST or None, instance=project)
 
     if request.method == 'POST' and form.is_valid():
-        form.instance.user = request.user
         project = form.save()
         project_manage = reverse('projects_manage', args=[project.slug])
         return HttpResponseRedirect(project_manage)
@@ -128,7 +128,8 @@ def project_import(request):
     """
     Import docs from an repo
     """
-    form = ImportProjectForm(request.POST or None)
+    project = Project(user=request.user)
+    form = ImportProjectForm(request.POST or None, instance=project)
 
     if request.method == 'POST' and form.is_valid():
         form.instance.user = request.user

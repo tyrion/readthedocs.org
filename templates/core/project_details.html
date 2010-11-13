@@ -13,6 +13,13 @@
     <a href="http://{{ project.slug}}.rtfd.org">{{ project.slug }}.rtfd.org</a>
 </p>
 
+{% if project.versions.count %}
+  <h3>Other Versions</h3>
+  {% for version in project.versions.all %}
+    <p><a href="{{ version.get_absolute_url }}">{{ version.version }}</a></p>
+  {% endfor %}
+{% endif %}
+
 
 <h3>Last Built</h3>
 <p>{{ project.modified_date|date:"N j, Y. P" }}</p>
